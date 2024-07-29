@@ -6,47 +6,45 @@ import ReceiptIcon from '@mui/icons-material/Receipt';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LoginIcon from '@mui/icons-material/Login';
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
+import { fetchSidebarItems } from '../utils/dataFetcher';
 
-const Sidebar = () => {
+const iconMap = {
+  DashboardIcon,
+  TableChartIcon,
+  ReceiptIcon,
+  AccountCircleIcon,
+  LoginIcon,
+  AppRegistrationIcon,
+};
+
+const Sidebar = ({ isOpen }) => {
+  const sidebarItems = fetchSidebarItems();
+
   return (
-    <Box sx={{ width: 250, backgroundColor: '#1e1e2f', color: 'white', height: '100vh', padding: 2 }}>
+    <Box sx={{ 
+      width: 250, 
+      backgroundColor: '#1e1e2f', 
+      color: 'white', 
+      height: '100vh', 
+      padding: 2, 
+      display: { xs: isOpen ? 'block' : 'none', sm: 'block' } 
+    }}>
       <List>
-        <ListItem button>
-          <ListItemIcon>
-            <DashboardIcon style={{ color: 'white' }} />
-          </ListItemIcon>
-          <ListItemText primary="Dashboard" />
-        </ListItem>
-        <ListItem button>
-          <ListItemIcon>
-            <TableChartIcon style={{ color: 'white' }} />
-          </ListItemIcon>
-          <ListItemText primary="Tables" />
-        </ListItem>
-        <ListItem button>
-          <ListItemIcon>
-            <ReceiptIcon style={{ color: 'white' }} />
-          </ListItemIcon>
-          <ListItemText primary="Billing" />
-        </ListItem>
-        <ListItem button>
-          <ListItemIcon>
-            <AccountCircleIcon style={{ color: 'white' }} />
-          </ListItemIcon>
-          <ListItemText primary="Profile" />
-        </ListItem>
-        <ListItem button>
-          <ListItemIcon>
-            <LoginIcon style={{ color: 'white' }} />
-          </ListItemIcon>
-          <ListItemText primary="Sign In" />
-        </ListItem>
-        <ListItem button>
-          <ListItemIcon>
-            <AppRegistrationIcon style={{ color: 'white' }} />
-          </ListItemIcon>
-          <ListItemText primary="Sign Up" />
-        </ListItem>
+        {sidebarItems.map((item, index) => {
+          const IconComponent = iconMap[item.icon];
+          if (!IconComponent) {
+            console.error(`Icon component ${item.icon} not found.`);
+            return null; // Or provide a fallback UI
+          }
+          return (
+            <ListItem button key={index}>
+              <ListItemIcon>
+                <IconComponent style={{ color: 'white' }} />
+              </ListItemIcon>
+              <ListItemText primary={item.title} />
+            </ListItem>
+          );
+        })}
       </List>
     </Box>
   );
